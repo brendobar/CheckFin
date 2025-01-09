@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id            String          @id @default(cuid())
+  name          String?
+  email         String          @unique
+  password      String?
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  tables        Table[]         // Связь с таблицей Tables
+  balance       Int             @default(0)
+
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model Table {
+  id            String          @id @default(cuid()) // Уникальный ID таблицы учета
+  name          String          // Название таблицы
+  userId        String          // ID пользователя, которому принадлежит таблица
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  operations    Operations[]    // Связь с операциями
+  balance       Int             @default(0)
+}
+
+model Operations {
+  id            Int             @id @default(autoincrement())
+  date          DateTime        @db.Date
+  name          String
+  value         Int             @default(0)
+  type          String
+  categories    String?
+  comment       String?
+  tableId       String          // ID таблицы учета, к которой относится операция
+  table         Table           @relation(fields: [tableId], references: [id], onDelete: Cascade)
+
+  createdAt     DateTime        @default(now())
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}

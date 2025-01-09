@@ -1,0 +1,33 @@
+.header{
+    display: block;
+    position: relative;
+    padding: 8px 16px;
+    background: var(--bgBlock);
+}
+.container{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.userDropdown{
+    padding-top: 20px !important;
+}
+.userContainer{
+    margin-left: auto;
+}
+.username{
+    cursor: pointer;
+}
+
+.logoutWrapper,
+.balance{
+    background-color: var(--bgBlock) !important;
+    cursor: default;
+}
+.balance{
+}
+.logout{
+    cursor: pointer;
+}
