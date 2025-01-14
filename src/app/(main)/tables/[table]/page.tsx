@@ -1,9 +1,10 @@
 import {Metadata} from "next";
+import {TableOperations} from "@/widgets/tables";
 
 
 type PageProps = {
     params: {
-        table: number
+        table: string
     }
 }
 
@@ -15,7 +16,7 @@ export const metadata: Metadata = {
 const TablePage = ({ params: { table } }: PageProps) => {
     return (
         <div>
-            Table: {table}
+            <TableOperations tableId={table}/>
         </div>
     );
 };

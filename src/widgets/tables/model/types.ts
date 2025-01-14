@@ -1,27 +1,14 @@
 import {User} from "@/entities/user";
+import {Operation} from "@/entities/operation";
 
 export type Table = {
     id: string,
     name: string,
     userId: string,
     user: User,
-    operations: Operations[],
+    operations: Operation[],
     balance: number
 
-}
-
-export type Operations = {
-    id: number,
-    date: Date,
-    name: string,
-    value: number,
-    type: string,
-    categories?: string,
-    comment?: string,
-    tableId: string,
-    table: Table
-
-    createdAt: Date
 }
 
 

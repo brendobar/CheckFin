@@ -4,12 +4,17 @@ import '@ant-design/v5-patch-for-react-19';
 import Header from "@/widgets/header/ui/header";
 import Footer from "@/widgets/footer/ui/footer";
 import RootProvider from "@/shared/providers/RootProvider";
-import { Roboto } from 'next/font/google'
+import { Roboto, Kanit } from 'next/font/google'
+import classNames from "classnames";
 
 
 const roboto = Roboto({
     weight: ["100", "300", "400", "500", "700", "900"],
     subsets: ['latin', 'cyrillic'],
+})
+const kanit = Kanit({
+    weight: ["100", "300", "400", "500", "700", "900"],
+    subsets: ['latin'],
 })
 
 export const metadata: Metadata = {
@@ -24,7 +29,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-        <body className={roboto.className}>
+        <body className={classNames(roboto.className, kanit.className)}>
         <RootProvider>
             <Header/>
             <main>{children}</main>

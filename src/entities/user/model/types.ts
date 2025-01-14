@@ -1,3 +1,5 @@
+import {Operation} from "@/entities/operation";
+
 export interface User {
     id: string;
     name?: string | null;
@@ -6,23 +8,12 @@ export interface User {
     emailVerified?: Date | null;
     image?: string | null;
     accounts: Account[];
-    operations: Operations[];
+    operations: Operation[];
     balance: number;
     createdAt: Date;
     updatedAt: Date;
 }
 
-export interface Operations {
-    id: number;
-    date: Date;
-    name: string;
-    value: number;
-    type: string;
-    categories?: string | null;
-    comment?: string | null;
-    user_id: string;
-    user: User;
-}
 
 export interface Account {
     userId: string;

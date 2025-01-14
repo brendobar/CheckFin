@@ -1,3 +1,3 @@
-import type { User, Account, Operations } from './model/types'
+import type { User, Account } from './model/types'
 
-export type { User, Account, Operations }
+export type { User, Account }

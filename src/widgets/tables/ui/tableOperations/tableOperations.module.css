@@ -1,0 +1,27 @@
+.head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.editBTN{
+    margin-left: 16px;
+    cursor: pointer;
+    border: 0;
+    background: unset;
+}
+
+
+.tableWrapper div:global(.ant-empty-image) svg > g > ellipse{
+    fill: var(--text);
+}
+.tableWrapper div:global(.ant-empty-image) svg > g > g{
+    stroke: var(--text);
+}
+.tableWrapper div:global(.ant-empty-image) svg > g > g > path:last-child{
+    fill: var(--text);
+}
+

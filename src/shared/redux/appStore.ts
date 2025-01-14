@@ -3,6 +3,7 @@ import {TypedUseSelectorHook, useDispatch, useSelector, useStore} from "react-re
 import {apiSlice} from "@/shared/redux/appApi";
 import {tablesSlice} from "@/widgets/tables/api/tablesSlice";
 import {userSlice} from "@/entities/user/api/userSlice";
+import {operationSlice} from "@/entities/operation/api/operationSlice";
 
 
 export const store = configureStore({
@@ -10,6 +11,7 @@ export const store = configureStore({
         [apiSlice.reducerPath]: apiSlice.reducer,
         user: userSlice.reducer,
         tables: tablesSlice.reducer,
+        operation: operationSlice.reducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()

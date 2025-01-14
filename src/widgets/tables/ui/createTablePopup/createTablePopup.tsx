@@ -1,3 +1,5 @@
+'use client'
+
 import styles from './createTablePopup.module.css'
 import {Button, Form, Input, message, Modal} from "antd";
 import {useAppSelector} from "@/shared/redux/appStore";

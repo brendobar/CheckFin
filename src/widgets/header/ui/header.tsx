@@ -61,6 +61,7 @@ const Header = () => {
     return (
         <header className={styles.header}>
             <div className={styles.container}>
+                <Link href="/" className={styles.logo}>CheckFin</Link>
                 {!user &&
                     <Button onClick={() => {
                         router.push('/auth/login')
