@@ -14,6 +14,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         try {
+            await db.operationCategories.deleteMany({
+                where: { operation: { tableId: tableId } },
+            });
+
             const deleteTable = await db.table.delete({
                 where: { id: tableId },
             });

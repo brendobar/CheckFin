@@ -1,7 +1,7 @@
 'use client'
 
 import styles from './operationPopup.module.css'
-import {Button, DatePicker, Form, Input, InputNumber, message, Modal, SelectProps} from "antd"
+import {Button, DatePicker, Form, Input, InputNumber, message, Modal, Select, SelectProps} from "antd"
 import {useEffect, useState} from "react"
 import {useCreateOperationMutation, useUpdateOperationMutation} from "@/entities/operation/api/operationSlice"
 import dayjs from "dayjs"
@@ -135,7 +135,13 @@ const OperationPopup = ({tableId, visible, onCancel, initialValues}: Props) => {
                     name="type"
                     rules={[{required: true, message: "Пожалуйста, выберите тип операции"}]}
                 >
-                    <Input placeholder="Тип (например, доход/расход)"/>
+                    <Select
+                        options={[
+                            { value: 'доход', label: 'Доход' },
+                            { value: 'расход', label: 'Расход' },
+                        ]}
+                        placeholder="Тип операции"
+                    />
                 </Form.Item>
                 <CategorySelect
                     label='Категории'

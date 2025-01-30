@@ -15,7 +15,7 @@ export const operationSlice = apiSlice.injectEndpoints({
                 method: "POST",
                 body
             }),
-            invalidatesTags: ['operation'],
+            invalidatesTags: ['operation', 'tables'],
         }),
         updateOperation: builder.mutation<void, OperationUpdateRequest>({
             query: ({ id, ...body }) => ({
@@ -23,14 +23,14 @@ export const operationSlice = apiSlice.injectEndpoints({
                 method: 'PATCH',
                 body
             }),
-            invalidatesTags: ['operation'],
+            invalidatesTags: ['operation', 'tables'],
         }),
         deleteOperation: builder.mutation({
             query: (id: number) => ({
                 url: `${uri}?id=${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: ['operation'],
+            invalidatesTags: ['operation', 'tables'],
         }),
     }),
 });

@@ -92,14 +92,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         } else if (req.method === 'DELETE') {
             const {id} = req.query
-
             const operationId = Number(id)
+
 
             if (!id || isNaN(operationId)) {
                 return res.status(400).json({message: 'Некорректные данные'})
             }
 
             try {
+                await db.operationCategories.deleteMany({
+                    where: { operationId }
+                });
                 const deleteOperation = await db.operations.delete({
                     where: {id: Number(id)},
                 })
@@ -109,7 +112,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
 
         } else {
-            res.setHeader('Allow', ['POST', 'GET', 'DELETE', 'PUT'])
+            res.setHeader('Allow', ['POST', 'GET', 'DELETE', 'PATCH'])
             return res.status(405).end(`Method ${req.method} Not Allowed`)
         }
     } catch (error) {

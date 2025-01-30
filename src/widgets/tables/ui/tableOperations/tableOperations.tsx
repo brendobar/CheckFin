@@ -47,6 +47,11 @@ const TableOperations = ({tableId}: TableProps) => {
             key: 'name',
         },
         {
+            title: 'Тип',
+            dataIndex: 'type',
+            key: 'type',
+        },
+        {
             title: 'Значение',
             dataIndex: 'value',
             key: 'value',
