@@ -1,12 +1,15 @@
 'use client'
 
 import styles from './operationPopup.module.css'
-import {Button, Form, Input, InputNumber, message, Modal} from "antd"
+import {Button, DatePicker, Form, Input, InputNumber, message, Modal, SelectProps} from "antd"
 import {useEffect, useState} from "react"
 import {useCreateOperationMutation, useUpdateOperationMutation} from "@/entities/operation/api/operationSlice"
-import { DatePicker } from "antd"
 import dayjs from "dayjs"
 import {Operation} from "@/entities/operation"
+import {useGetCategorysQuery} from "@/entities/сategory/api/categorySlice";
+import CategorySelect from "@/widgets/tables/ui/addOperationPopup/CategorySelect";
+import {Category} from "@/entities/сategory";
+import {OperationCreateRequest} from "@/entities/operation/model/types";
 
 type Props = {
     tableId: string
@@ -20,46 +23,47 @@ type FormFields = {
     name: string
     value: number
     type: string
-    categories: string
+    categories: string[]
     comment?: string
     tableId: string
     date: Date
 }
 
-const OperationPopup = ({ tableId, visible, onCancel, initialValues }: Props) => {
+const OperationPopup = ({tableId, visible, onCancel, initialValues}: Props) => {
     const [messageApi, contextHolder] = message.useMessage()
     const [addOperationForm] = Form.useForm()
     const [isSubmitting, setIsSubmitting] = useState(false)
     const [addOperation] = useCreateOperationMutation()
     const [updateOperation] = useUpdateOperationMutation()
 
+    const {data: categories, error, isLoading, refetch} = useGetCategorysQuery(undefined)
 
-    const getFormInitialValues = () => {
-        return initialValues
-            ? {
-                name: initialValues.name,
-                value: initialValues.value,
-                type: initialValues.type,
-                categories: initialValues.categories,
-                comment: initialValues.comment || '',
-                date: dayjs(initialValues.date),
-            }
-            : {
-                name: '',
-                value: '',
-                type: '',
-                categories: '',
-                comment: '',
-                date: dayjs(),
-            }
+    const categoriesOptions: SelectProps['options'] = [];
+    if (categories && !isLoading && !error) {
+        categories.forEach((category: Category) => {
+            categoriesOptions.push({
+                label: category.name,
+                value: category.id
+            })
+        })
     }
 
 
-    useEffect(() => {
-        addOperationForm.setFieldsValue(getFormInitialValues())
+    const getFormInitialValues = () => ({
+        name: initialValues?.name || '',
+        value: initialValues?.value || '',
+        type: initialValues?.type || '',
+        categories: initialValues?.categories?.map(cat => cat.category.id) || [],
+        comment: initialValues?.comment || '',
+        date: initialValues ? dayjs(initialValues.date) : dayjs(),
+    })
 
-        if (!visible) {
-            addOperationForm.resetFields()
+    useEffect(() => {
+        if (visible) {
+            if (!initialValues) {
+                addOperationForm.resetFields()
+            }
+            addOperationForm.setFieldsValue(getFormInitialValues())
         }
     }, [visible, initialValues])
 
@@ -67,22 +71,23 @@ const OperationPopup = ({ tableId, visible, onCancel, initialValues }: Props) =>
     const onSubmit = async (data: FormFields) => {
         setIsSubmitting(true)
         try {
+            const formattedData: OperationCreateRequest = {
+                ...data,
+                value: Number(data.value),
+                date: dayjs(data.date).toISOString(),
+                tableId,
+                categories: data.categories?.map((cat) => cat) || [],
+            };
+
             if (initialValues) {
                 await updateOperation({
                     id: initialValues.id,
-                    body: {
-                        ...data,
-                    }
-                }).unwrap()
-                messageApi.success("Операция обновлена")
-            }else{
-                await addOperation({
-                    ...data,
-                    value: Number(data.value),
-                    date: dayjs(data.date).toISOString(),
-                    tableId: tableId
-                }).unwrap()
-                messageApi.success("Операция внесена")
+                    ...formattedData,
+                }).unwrap();
+                messageApi.success("Операция обновлена");
+            } else {
+                await addOperation(formattedData).unwrap();
+                messageApi.success("Операция внесена");
             }
             onCancel()
             addOperationForm.resetFields()
@@ -93,6 +98,7 @@ const OperationPopup = ({ tableId, visible, onCancel, initialValues }: Props) =>
             setIsSubmitting(false)
         }
     }
+
 
     return (
         <Modal
@@ -113,36 +119,41 @@ const OperationPopup = ({ tableId, visible, onCancel, initialValues }: Props) =>
                 <Form.Item
                     label="Название операции"
                     name="name"
-                    rules={[{ required: true, message: "Пожалуйста, введите название операции" }]}
+                    rules={[{required: true, message: "Пожалуйста, введите название операции"}]}
                 >
-                    <Input placeholder="Название операции" />
+                    <Input placeholder="Название операции"/>
                 </Form.Item>
                 <Form.Item
                     label="Сумма"
                     name="value"
-                    rules={[{ required: true, message: "Пожалуйста, введите сумму операции" }]}
+                    rules={[{required: true, message: "Пожалуйста, введите сумму операции"}]}
                 >
-                    <InputNumber style={{ width: '100%' }} placeholder="Сумма" />
+                    <InputNumber style={{width: '100%'}} placeholder="Сумма"/>
                 </Form.Item>
                 <Form.Item
                     label="Тип"
                     name="type"
-                    rules={[{ required: true, message: "Пожалуйста, выберите тип операции" }]}
+                    rules={[{required: true, message: "Пожалуйста, выберите тип операции"}]}
                 >
-                    <Input placeholder="Тип (например, доход/расход)" />
+                    <Input placeholder="Тип (например, доход/расход)"/>
                 </Form.Item>
-                <Form.Item label="Категории" name="categories">
-                    <Input placeholder="Категории (через запятую)" />
-                </Form.Item>
+                <CategorySelect
+                    label='Категории'
+                    name='categories'
+                    placeholder=''
+
+                    categoriesOptions={categoriesOptions}
+                    onCategoryAdded={() => refetch()}
+                />
                 <Form.Item label="Комментарий" name="comment">
-                    <Input.TextArea placeholder="Комментарий" />
+                    <Input.TextArea placeholder="Комментарий"/>
                 </Form.Item>
                 <Form.Item
                     label="Дата"
                     name="date"
-                    rules={[{ required: true, message: "Пожалуйста, выберите дату операции" }]}
+                    rules={[{required: true, message: "Пожалуйста, выберите дату операции"}]}
                 >
-                    <DatePicker style={{ width: "100%" }} />
+                    <DatePicker style={{width: "100%"}}/>
                 </Form.Item>
                 <Button htmlType="submit" className={styles.button} loading={isSubmitting}>
                     {initialValues ? 'Обновить' : 'Создать'}

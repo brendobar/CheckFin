@@ -2,18 +2,13 @@ import {Metadata} from "next";
 import {TableOperations} from "@/widgets/tables";
 
 
-type PageProps = {
-    params: {
-        table: string
-    }
-}
-
 export const metadata: Metadata = {
-    title: 'Your AI images',
-    keywords: 'ai images',
+    title: 'Table',
 }
 
-const TablePage = ({ params: { table } }: PageProps) => {
+const TablePage = async (props: { params: Promise<{ table: string }> }) => {
+    const params = await props.params;
+    const { table } = params;
     return (
         <div>
             <TableOperations tableId={table}/>

@@ -4,6 +4,7 @@ import {apiSlice} from "@/shared/redux/appApi";
 import {tablesSlice} from "@/widgets/tables/api/tablesSlice";
 import {userSlice} from "@/entities/user/api/userSlice";
 import {operationSlice} from "@/entities/operation/api/operationSlice";
+import {categorySlice} from "@/entities/сategory/api/categorySlice";
 
 
 export const store = configureStore({
@@ -11,7 +12,8 @@ export const store = configureStore({
         [apiSlice.reducerPath]: apiSlice.reducer,
         user: userSlice.reducer,
         tables: tablesSlice.reducer,
-        operation: operationSlice.reducer
+        operation: operationSlice.reducer,
+        category: categorySlice.reducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware()

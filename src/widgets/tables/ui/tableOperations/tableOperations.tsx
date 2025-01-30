@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Empty, message, Popconfirm, Table} from 'antd';
 import type {ColumnsType} from 'antd/es/table';
 import styles from './tableOperations.module.css';
@@ -26,11 +26,12 @@ const TableOperations = ({tableId}: TableProps) => {
     const [selectedOperation, setSelectedOperation] = useState<Operation | null>(null)
 
 
-    if (error) {
-        message.error('Ошибка при загрузке таблиц');
-        console.error(error)
-        return null;
-    }
+    useEffect(() => {
+        if (error) {
+            messageApi.error('Ошибка при загрузке таблиц');
+            console.error(error);
+        }
+    }, [error, messageApi]);
 
 
     const columns: ColumnsType<Operation> = [
@@ -54,6 +55,17 @@ const TableOperations = ({tableId}: TableProps) => {
             title: 'Категории',
             dataIndex: 'categories',
             key: 'categories',
+            render: (categories: { category: { id: string; name: string } }[], record: Operation) => (
+                <ul>
+                    {categories.map(cat => (
+                        <li key={cat.category.id}>
+                            {cat.category.name}
+                        </li>
+                    ))
+                    }
+
+                </ul>
+            ),
         },
         {
             title: 'Комментарий',
@@ -115,6 +127,7 @@ const TableOperations = ({tableId}: TableProps) => {
                     setOpenPopup(true)
                 }}><PlusOutlined/>Добавить операцию</Button>
             </div>
+
             <Table
                 rowKey="id"
                 loading={isLoading}
@@ -123,7 +136,7 @@ const TableOperations = ({tableId}: TableProps) => {
                 className={styles.tableWrapper}
 
                 pagination={
-                    !isLoading && operations.length > 1 ?{
+                    !isLoading && !error && operations.length > 1 ?{
                         pageSize: 30,
                         position: ['bottomRight'],
                         showSizeChanger: true,

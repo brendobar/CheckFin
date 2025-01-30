@@ -18,6 +18,7 @@ interface TableRecord {
 
 const Tables = ({userId}: TablesProps) => {
     const {data: tables, error, isLoading} = useGetTablesQuery(userId);
+    
     if (error) {
         message.error('Ошибка при загрузке таблиц');
         console.error(error)

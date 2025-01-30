@@ -7,43 +7,65 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id            String          @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String          @unique
+  email         String     @unique
   password      String?
   emailVerified DateTime?
   image         String?
   accounts      Account[]
-  tables        Table[]         // Связь с таблицей Tables
-  balance       Int             @default(0)
+  tables        Table[] // Связь с таблицей Tables
+  balance       Int        @default(0)
+  categories    Category[] // Связь с пользовательскими категориями
 
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Table {
-  id            String          @id @default(cuid()) // Уникальный ID таблицы учета
-  name          String          // Название таблицы
-  userId        String          // ID пользователя, которому принадлежит таблица
-  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
-  operations    Operations[]    // Связь с операциями
-  balance       Int             @default(0)
+  id         String       @id @default(cuid()) // Уникальный ID таблицы учета
+  name       String // Название таблицы
+  userId     String // ID пользователя, которому принадлежит таблица
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  operations Operations[] // Связь с операциями
+  balance    Int          @default(0)
 }
 
 model Operations {
-  id            Int             @id @default(autoincrement())
-  date          DateTime        @db.Date
-  name          String
-  value         Int             @default(0)
-  type          String
-  categories    String?
-  comment       String?
-  tableId       String          // ID таблицы учета, к которой относится операция
-  table         Table           @relation(fields: [tableId], references: [id], onDelete: Cascade)
+  id         Int                   @id @default(autoincrement())
+  date       DateTime              @db.Date
+  name       String
+  value      Int                   @default(0)
+  type       String
+  categories OperationCategories[]
+  comment    String?
+  tableId    String // ID таблицы учета, к которой относится операция
+  table      Table                 @relation(fields: [tableId], references: [id], onDelete: Cascade)
 
-  createdAt     DateTime        @default(now())
+  createdAt DateTime @default(now())
+}
+
+model Category {
+  id         String                @id @default(cuid())
+  name       String // Название категории
+  userId     String? // ID пользователя, если категория пользовательская
+  user       User?                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  operations OperationCategories[] // Связь с промежуточной таблицей
+  limit      Int? // Лимит трат по категории (если применимо)
+
+  createdAt DateTime @default(now())
+}
+
+model OperationCategories {
+  operationId Int // Внешний ключ на Operations
+  operation   Operations @relation(fields: [operationId], references: [id])
+  categoryId  String // Внешний ключ на Category
+  category    Category   @relation(fields: [categoryId], references: [id])
+
+  @@id([operationId, categoryId]) // Композитный первичный ключ
+  @@index([operationId]) // Индексы для ускорения запросов
+  @@index([categoryId]) // Индексы для ускорения запросов
 }
 
 model Account {
@@ -59,10 +81,10 @@ model Account {
   id_token          String?
   session_state     String?
 
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  user              User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
 }
