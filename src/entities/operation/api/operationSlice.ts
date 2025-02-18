@@ -1,5 +1,9 @@
 import {apiSlice} from "@/shared/redux/appApi";
-import {OperationCreateRequest, OperationUpdateRequest} from "@/entities/operation/model/types";
+import {
+    OperationCreateRequest,
+    OperationsByTypeRequest,
+    OperationUpdateRequest
+} from "@/entities/operation/model/types";
 
 const uri = '/api/operations'
 
@@ -7,6 +11,10 @@ export const operationSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getOperations: builder.query({
             query: (tableId: string) => `${uri}?tableId=${tableId}`,
+            providesTags: ['operation'],
+        }),
+        getOperationsByType: builder.query({
+            query: ({tableId, type}: OperationsByTypeRequest) => `${uri}?tableId=${tableId}&type=${type}`,
             providesTags: ['operation'],
         }),
         createOperation: builder.mutation<void, OperationCreateRequest>({
@@ -37,6 +45,7 @@ export const operationSlice = apiSlice.injectEndpoints({
 
 export const {
     useGetOperationsQuery,
+    useGetOperationsByTypeQuery,
     useCreateOperationMutation,
     useUpdateOperationMutation,
     useDeleteOperationMutation,

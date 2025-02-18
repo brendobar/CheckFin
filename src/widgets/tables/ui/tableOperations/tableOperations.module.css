@@ -1,3 +1,6 @@
+.title{
+    margin-bottom: 48px;
+}
 .head{
     display: flex;
     align-items: center;
@@ -12,9 +15,33 @@
     cursor: pointer;
     border: 0;
     background: unset;
+    color: var(--text);
 }
 
 
+.balanceChart{
+    margin-bottom: 48px;
+}
+
+
+.categories{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 48px;
+}
+
+.incomeCategories,
+.expenseOperations{
+    max-width: calc(50% - 24px);
+    width: 100%;
+}
+
+
+.tableWrapper div:global(.ant-table){
+    overflow-x: auto;
+}
 .tableWrapper div:global(.ant-empty-image) svg > g > ellipse{
     fill: var(--text);
 }
@@ -25,3 +52,32 @@
     fill: var(--text);
 }
 
+
+
+
+.categories{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 0;
+    list-style: none;
+}
+
+.categories li{
+    padding: 4px 8px;
+    border: 1px solid var(--text);
+    border-radius: 4px;
+    background-color: rgb(from var(--text) r g b / 10%);
+}
+
+
+
+
+@media screen and (max-width: 767px){
+
+    .incomeCategories,
+    .expenseOperations{
+        max-width: 100%;
+    }
+}

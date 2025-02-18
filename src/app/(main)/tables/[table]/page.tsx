@@ -7,8 +7,9 @@ export const metadata: Metadata = {
 }
 
 const TablePage = async (props: { params: Promise<{ table: string }> }) => {
-    const params = await props.params;
-    const { table } = params;
+    const params = await props.params
+    const { table } = params
+
     return (
         <div>
             <TableOperations tableId={table}/>
@@ -17,3 +18,8 @@ const TablePage = async (props: { params: Promise<{ table: string }> }) => {
 };
 
 export default TablePage;
+
+
+
+
+

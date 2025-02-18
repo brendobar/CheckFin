@@ -1,5 +1,5 @@
 import {Table} from "@/widgets/tables";
-import {Category, OperationCategories} from "@/entities/сategory";
+import {OperationCategories} from "@/entities/category";
 
 
 export type Operation = {
@@ -34,3 +34,9 @@ export type OperationUpdateRequest = {
     comment?: string;
     date?: string;
 };
+
+
+export type OperationsByTypeRequest = {
+    tableId: string,
+    type: 'доход' | 'расход'
+}

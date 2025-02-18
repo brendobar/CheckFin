@@ -4,12 +4,12 @@ const uri = '/api/categories'
 
 export const categorySlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        getCategorys: builder.query({
+        getCategories: builder.query({
             query: (userId?: string | undefined ) => {
                 const queryString = userId ? `?userId=${userId}` : '';
                 return `${uri}${queryString}`;
             },
-            providesTags: ['сategory'],
+            providesTags: ['category'],
         }),
         createCategory: builder.mutation({
             query: ({ userId, name}) => ({
@@ -17,20 +17,20 @@ export const categorySlice = apiSlice.injectEndpoints({
                 method: "POST",
                 body: { userId, name },
             }),
-            invalidatesTags: ['сategory'],
+            invalidatesTags: ['category'],
         }),
         deleteCategory: builder.mutation({
             query: (id: number) => ({
                 url: `${uri}?id=${id}`,
                 method: 'DELETE',
             }),
-            invalidatesTags: ['сategory'],
+            invalidatesTags: ['category'],
         }),
     }),
 });
 
 export const {
-    useGetCategorysQuery,
+    useGetCategoriesQuery,
     useCreateCategoryMutation,
     useDeleteCategoryMutation,
 } = categorySlice;

@@ -9,14 +9,30 @@ import classNames from "classnames";
 import {DeleteOutlined, EditOutlined, LeftOutlined, PlusOutlined} from "@ant-design/icons";
 import OperationPopup from "@/widgets/tables/ui/addOperationPopup/operationPopup";
 import {useRouter} from "next/navigation";
-import {useDeleteOperationMutation, useGetOperationsQuery} from "@/entities/operation/api/operationSlice";
+import {
+    useDeleteOperationMutation,
+    useGetOperationsByTypeQuery,
+    useGetOperationsQuery
+} from "@/entities/operation/api/operationSlice";
+import {useGetTableQuery} from "@/widgets/tables/api/tablesSlice";
+import {BalanceChart, CategoryChart} from "@/widgets/tables";
 
 type TableProps = {
     tableId: string
 };
 
 const TableOperations = ({tableId}: TableProps) => {
-    const {data: operations, error, isLoading} = useGetOperationsQuery(tableId)
+    const {data: table, error: tableError, isLoading: isTableLoading } = useGetTableQuery(tableId)
+    const {data: operations, error, isLoading: isOperationsLoading} = useGetOperationsQuery(tableId)
+
+    const {data: incomeOperations, error: incomeOperationsError, isLoading: isIncomeOperationsLoading} = useGetOperationsByTypeQuery({
+        tableId,
+        type: 'доход',
+    })
+    const {data: expenseOperations, error: expenseOperationsError, isLoading: isExpenseOperationsLoading} = useGetOperationsByTypeQuery({
+        tableId,
+        type: 'расход',
+    })
 
     const router = useRouter()
     const [messageApi, contextHolder] = message.useMessage()
@@ -39,29 +55,34 @@ const TableOperations = ({tableId}: TableProps) => {
             title: 'Дата',
             dataIndex: 'date',
             key: 'date',
+            width: '100px',
             render: (date) => new Date(date).toLocaleDateString(),
         },
         {
             title: 'Название',
             dataIndex: 'name',
             key: 'name',
+            width: '200px',
         },
         {
             title: 'Тип',
             dataIndex: 'type',
             key: 'type',
+            width: '80px',
         },
         {
             title: 'Значение',
             dataIndex: 'value',
             key: 'value',
+            width: '100px',
         },
         {
             title: 'Категории',
             dataIndex: 'categories',
             key: 'categories',
+            width: '200px',
             render: (categories: { category: { id: string; name: string } }[], record: Operation) => (
-                <ul>
+                <ul className={styles.categories}>
                     {categories.map(cat => (
                         <li key={cat.category.id}>
                             {cat.category.name}
@@ -76,6 +97,7 @@ const TableOperations = ({tableId}: TableProps) => {
             title: 'Комментарий',
             dataIndex: 'comment',
             key: 'comment',
+            width: '250px',
         },
         {
             dataIndex: 'Действия',
@@ -120,8 +142,10 @@ const TableOperations = ({tableId}: TableProps) => {
         setOpenPopup(true)
     };
 
+
     return (
         <div className={classNames(styles.table, 'py-96 main-container')}>
+            {table && !isTableLoading && !tableError && <h1 className={styles.title}>{table.name}</h1>}
 
             <div className={styles.head}>
                 <Button onClick={() => router.push('/tables')}><LeftOutlined/>Назад</Button>
@@ -133,15 +157,36 @@ const TableOperations = ({tableId}: TableProps) => {
                 }}><PlusOutlined/>Добавить операцию</Button>
             </div>
 
+
+            <div className={styles.balanceChart}>
+                <BalanceChart operations={operations} loading={isOperationsLoading}/>
+            </div>
+
+            <div className={styles.categories}>
+                <CategoryChart
+                    data={incomeOperations}
+                    title={'Категории по доходам'}
+                    customClass={styles.incomeCategories}
+                    loading={isIncomeOperationsLoading}
+                />
+                <CategoryChart
+                    data={expenseOperations}
+                    title={'Категории по расходам'}
+                    customClass={styles.expenseOperations}
+                    loading={isExpenseOperationsLoading}
+                />
+            </div>
+
+
             <Table
                 rowKey="id"
-                loading={isLoading}
+                loading={isOperationsLoading}
                 columns={columns}
                 dataSource={operations}
                 className={styles.tableWrapper}
-
+                tableLayout="fixed"
                 pagination={
-                    !isLoading && !error && operations.length > 1 ?{
+                    !isOperationsLoading && !error && operations.length > 1 ? {
                         pageSize: 30,
                         position: ['bottomRight'],
                         showSizeChanger: true,

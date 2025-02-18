@@ -6,10 +6,11 @@ import {useEffect, useState} from "react"
 import {useCreateOperationMutation, useUpdateOperationMutation} from "@/entities/operation/api/operationSlice"
 import dayjs from "dayjs"
 import {Operation} from "@/entities/operation"
-import {useGetCategorysQuery} from "@/entities/сategory/api/categorySlice";
+import {useGetCategoriesQuery} from "@/entities/category/api/categorySlice";
 import CategorySelect from "@/widgets/tables/ui/addOperationPopup/CategorySelect";
-import {Category} from "@/entities/сategory";
+import {Category} from "@/entities/category";
 import {OperationCreateRequest} from "@/entities/operation/model/types";
+import {useAppSelector} from "@/shared/redux/appStore";
 
 type Props = {
     tableId: string
@@ -36,7 +37,9 @@ const OperationPopup = ({tableId, visible, onCancel, initialValues}: Props) => {
     const [addOperation] = useCreateOperationMutation()
     const [updateOperation] = useUpdateOperationMutation()
 
-    const {data: categories, error, isLoading, refetch} = useGetCategorysQuery(undefined)
+    const user = useAppSelector((state) => state.user.user)
+
+    const {data: categories, error, isLoading, refetch} = useGetCategoriesQuery(user?.id || undefined)
 
     const categoriesOptions: SelectProps['options'] = [];
     if (categories && !isLoading && !error) {
@@ -74,7 +77,7 @@ const OperationPopup = ({tableId, visible, onCancel, initialValues}: Props) => {
             const formattedData: OperationCreateRequest = {
                 ...data,
                 value: Number(data.value),
-                date: dayjs(data.date).toISOString(),
+                date: dayjs(data.date).format('YYYY-MM-DD'),
                 tableId,
                 categories: data.categories?.map((cat) => cat) || [],
             };
@@ -159,7 +162,7 @@ const OperationPopup = ({tableId, visible, onCancel, initialValues}: Props) => {
                     name="date"
                     rules={[{required: true, message: "Пожалуйста, выберите дату операции"}]}
                 >
-                    <DatePicker style={{width: "100%"}}/>
+                    <DatePicker format={'YYYY-MM-DD'} style={{width: "100%"}}/>
                 </Form.Item>
                 <Button htmlType="submit" className={styles.button} loading={isSubmitting}>
                     {initialValues ? 'Обновить' : 'Создать'}

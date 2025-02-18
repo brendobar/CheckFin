@@ -1,7 +1,7 @@
 import {PlusOutlined} from '@ant-design/icons'
 import {Button, Divider, Form, Input, InputRef, message, Select, SelectProps, Space} from 'antd'
 import {useRef, useState} from 'react'
-import {useCreateCategoryMutation} from "@/entities/сategory/api/categorySlice"
+import {useCreateCategoryMutation} from "@/entities/category/api/categorySlice"
 import {useAppSelector} from "@/shared/redux/appStore";
 
 type CategorySelectProps = {

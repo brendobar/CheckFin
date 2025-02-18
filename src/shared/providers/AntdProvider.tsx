@@ -47,7 +47,8 @@ export default function AntdProvider({children,}: { children: React.ReactNode })
                         hoverBorderColor: 'var(--borderHover)',
                         activeBorderColor: 'var(--borderHover)',
                         handleHoverColor: 'var(--text)',
-                        activeShadow: 'unset'
+                        activeShadow: 'unset',
+                        colorTextDescription: 'var(--text)'
                     },
                     Select: {
                         hoverBorderColor: 'var(--borderHover)',

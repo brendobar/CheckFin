@@ -1,0 +1,19 @@
+.loading{
+    height: 335px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chart{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    color: var(--text);
+}
+.chart g:global(.recharts-layer.recharts-pie-sector) {
+    outline: none !important;
+}
+.title{
+    text-align: center;
+}

@@ -2,7 +2,7 @@
     position: relative;
     cursor: pointer;
     padding: 8px;
-    background: var(--text);
+    background: var(--background);
     border-radius: 14px;
     display: flex;
     align-items: center;
@@ -18,7 +18,7 @@
     position: absolute;
     left: 8px;
     top: 8px;
-    fill: var(--bgBlock);
+    fill: var(--text);
     transition: left 0.2s ease-in-out;
 }
 

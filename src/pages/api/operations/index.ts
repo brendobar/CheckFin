@@ -5,7 +5,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
         if (req.method === 'POST') {
             const {name, value, type, categories, comment, tableId, date} = req.body
-
             try {
                 const operation = await db.operations.create({
                     data: {
@@ -31,25 +30,72 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 return res.status(500).json({message: 'Ошибка сервера', error: error})
             }
         } else if (req.method === 'GET') {
-            const {tableId} = req.query
+            const {tableId, type} = req.query
 
-            try {
-                const operations = await db.operations.findMany({
-                    where: {tableId: String(tableId)},
-                    include: {
-                        table: true,
-                        categories: {
+
+            if (type){
+                if(type == 'доход' || type == 'расход'){
+                    try {
+                        const operations = await db.operations.findMany({
+                            where: {
+                                tableId: String(tableId),
+                                type: String(type)
+                            },
+                            orderBy: {
+                                date: 'asc'
+                            },
                             include: {
-                                category: true
+                                categories: {
+                                    include: {
+                                        category: true
+                                    }
+                                }
                             }
-                        }
-                    },
-                })
-                return res.status(200).json(operations);
-            } catch (error) {
-                return res.status(500).json({message: 'Ошибка сервера', error: error});
-            }
+                        })
 
+                        const categorySums = operations.reduce((acc, operation) => {
+                            operation.categories.forEach(({ category }) => {
+                                if (!acc[category.name]) {
+                                    acc[category.name] = 0;
+                                }
+                                acc[category.name] += operation.value;
+                            });
+                            return acc;
+                        }, {} as Record<string, number>)
+
+                        const categoriesSums = Object.keys(categorySums).map(name => ({
+                            name,
+                            value: categorySums[name]
+                        }));
+
+                        return res.status(200).json(categoriesSums);
+                    } catch (error) {
+                        return res.status(500).json({message: 'Ошибка сервера', error: error});
+                    }
+                }else{
+                    return res.status(400).json({message: 'Указан неверный тип операций'});
+                }
+            }else{
+                try {
+                    const operations = await db.operations.findMany({
+                        where: {tableId: String(tableId)},
+                        orderBy: {
+                            date: 'asc'
+                        },
+                        include: {
+                            table: true,
+                            categories: {
+                                include: {
+                                    category: true
+                                }
+                            }
+                        },
+                    })
+                    return res.status(200).json(operations);
+                } catch (error) {
+                    return res.status(500).json({message: 'Ошибка сервера', error: error});
+                }
+            }
 
         } else if (req.method === 'PATCH') {
             const {id} = req.query

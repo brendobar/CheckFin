@@ -16,6 +16,6 @@ export const apiSlice = createApi({
         'user',
         'tables',
         'operation',
-        'сategory'
+        'category'
     ],
 });

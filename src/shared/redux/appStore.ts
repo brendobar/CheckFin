@@ -4,7 +4,7 @@ import {apiSlice} from "@/shared/redux/appApi";
 import {tablesSlice} from "@/widgets/tables/api/tablesSlice";
 import {userSlice} from "@/entities/user/api/userSlice";
 import {operationSlice} from "@/entities/operation/api/operationSlice";
-import {categorySlice} from "@/entities/сategory/api/categorySlice";
+import {categorySlice} from "@/entities/category/api/categorySlice";
 
 
 export const store = configureStore({
