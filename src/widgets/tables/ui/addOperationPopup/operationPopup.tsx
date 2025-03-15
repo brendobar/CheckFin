@@ -10,7 +10,7 @@ import {useGetCategoriesQuery} from "@/entities/category/api/categorySlice";
 import CategorySelect from "@/widgets/tables/ui/addOperationPopup/CategorySelect";
 import {Category} from "@/entities/category";
 import {OperationCreateRequest} from "@/entities/operation/model/types";
-import {useAppSelector} from "@/shared/redux/appStore";
+import {useActiveUser} from "@/shared/hooks/useActiveUser";
 
 type Props = {
     tableId: string
@@ -37,7 +37,7 @@ const OperationPopup = ({tableId, visible, onCancel, initialValues}: Props) => {
     const [addOperation] = useCreateOperationMutation()
     const [updateOperation] = useUpdateOperationMutation()
 
-    const user = useAppSelector((state) => state.user.user)
+    const { user, isLoading: isUserLoading } = useActiveUser()
 
     const {data: categories, error, isLoading, refetch} = useGetCategoriesQuery(user?.id || undefined)
 
@@ -84,6 +84,7 @@ const OperationPopup = ({tableId, visible, onCancel, initialValues}: Props) => {
 
             if (initialValues) {
                 await updateOperation({
+                    userId: user!.id,
                     id: initialValues.id,
                     ...formattedData,
                 }).unwrap();

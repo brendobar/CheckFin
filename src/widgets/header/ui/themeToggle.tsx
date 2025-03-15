@@ -1,20 +1,24 @@
+'use client'
+
 import styles from './themeToggle.module.css'
 import {useEffect, useState} from "react";
 import classNames from "classnames";
+
 
 const ThemeToggle = () => {
     const [theme, setTheme] = useState('light')
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme') || 'light'
-        setTheme(savedTheme)
         document.documentElement.setAttribute('data-theme', savedTheme)
+        setTheme(savedTheme)
     }, [])
 
     const toggleTheme = (newTheme: 'light' | 'dark') => {
         setTheme(newTheme)
         document.documentElement.setAttribute('data-theme', newTheme)
         localStorage.setItem('theme', newTheme)
+
     }
 
     return (

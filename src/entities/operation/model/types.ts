@@ -26,6 +26,7 @@ export type OperationCreateRequest = {
 };
 
 export type OperationUpdateRequest = {
+    userId: string;
     id: number;
     name?: string;
     value?: number;

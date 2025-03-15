@@ -15,6 +15,7 @@
     --borderHover: #ffffff;
     --black: #ffffff;
     --black50: rgba(0, 0, 0, 0.5);
+    --black10: rgba(0, 0, 0, 0.1);
     --white: #000000;
     --white50: rgba(255, 255, 255, 0.5);
   }
@@ -35,6 +36,7 @@
   --borderHover: #17252A;
   --black: #000000;
   --black50: rgba(255, 255, 255, 0.5);
+  --black10: rgba(255, 255, 255, 0.1);
   --white: #ffffff;
   --white50: rgba(0, 0, 0, 0.5);
 }
@@ -53,6 +55,7 @@
   --borderHover: #ffffff;
   --black: #ffffff;
   --black50: rgba(0, 0, 0, 0.5);
+  --black10: rgba(0, 0, 0, 0.1);
   --white: #000000;
   --white50: rgba(255, 255, 255, 0.5);
 }

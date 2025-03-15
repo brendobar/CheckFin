@@ -69,6 +69,8 @@ const AuthForm = ({type}: AuthFormProps) => {
         }
         setIsAction(false)
     }
+
+
     const register = async (data: RegisterFormFields) => {
         setIsAction(true)
         const { name, email, password } = data;
@@ -82,7 +84,7 @@ const AuthForm = ({type}: AuthFormProps) => {
 
             if (response.ok) {
                 messageApi.success('Registration successful!');
-                router.push('/');
+                await login({email, password})
             } else {
                 const errorData = await response.json();
                 messageApi.error(errorData.message || 'Registration failed');

@@ -30,6 +30,7 @@ model Table {
   user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   operations Operations[] // Связь с операциями
   balance    Int          @default(0)
+  primary    Boolean      @default(false)
 }
 
 model Operations {

@@ -1,0 +1,51 @@
+.heroContainer{
+    display: flex;
+    align-items: center;
+    gap: 64px;
+}
+.heroInfo{
+    max-width: 544px;
+    width: 100%;
+}
+.title{
+    margin-bottom: 24px;
+}
+.title span{
+    color: var(--accent);
+}
+.animation{
+    max-width: 512px;
+    height: 350px;
+    width: 100%;
+    overflow: hidden;
+}
+.animation svg{
+    height: 512px !important;
+    margin-top: -100px;
+}
+
+@media screen and (max-width: 1152px){
+    .heroContainer{
+        flex-direction: column;
+        gap: 32px;
+    }
+    .heroInfo{
+        max-width: 100%;
+    }
+    .animation{
+        max-width: 100%;
+        height: 400px;
+    }
+    .animation svg{
+        height: auto !important;
+        margin-top: -250px;
+    }
+}
+@media screen and (max-width: 767px){
+    .animation{
+        height: auto;
+    }
+    .animation svg{
+        margin-top: -100px;
+    }
+}

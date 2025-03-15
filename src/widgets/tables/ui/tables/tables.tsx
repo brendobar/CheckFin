@@ -1,8 +1,8 @@
 'use client';
 
-import {message, Popconfirm, Table} from 'antd';
+import {message, Popconfirm, Switch, Table} from 'antd';
 import styles from './tables.module.css';
-import {useDeleteTableMutation, useGetTablesQuery} from '@/widgets/tables/api/tablesSlice';
+import {useDeleteTableMutation, useGetTablesQuery, useUpdateTableMutation} from '@/widgets/tables/api/tablesSlice';
 import {DeleteOutlined} from '@ant-design/icons';
 import Link from "next/link";
 
@@ -11,14 +11,15 @@ interface TablesProps {
 }
 
 interface TableRecord {
-    id: string;
-    name: string;
-    balance: number;
+    id: string
+    name: string
+    balance: number
+    primary: boolean
 }
 
 const Tables = ({userId}: TablesProps) => {
     const {data: tables, error, isLoading} = useGetTablesQuery(userId);
-    
+
     if (error) {
         message.error('Ошибка при загрузке таблиц');
         console.error(error)
@@ -28,6 +29,8 @@ const Tables = ({userId}: TablesProps) => {
 
 
     const [messageApi, contextHolder] = message.useMessage()
+
+
 
     const columns = [
         {

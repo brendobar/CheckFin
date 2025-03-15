@@ -13,12 +13,20 @@ export const tablesSlice = apiSlice.injectEndpoints({
             query: ( tableId) => `${uri}?tableId=${tableId}`,
         }),
         createTable: builder.mutation({
-            query: ({ userId, tableName }: { userId: string; tableName: string }) => ({
+            query: ({ userId, tableName, primary }: { userId: string; tableName: string; primary?: boolean }) => ({
                 url: `${uri}`,
                 method: 'POST',
-                body: { userId, tableName },
+                body: { userId, tableName, primary },
             }),
             invalidatesTags: ['tables'],
+        }),
+        updateTable: builder.mutation({
+            query: ({ tableId, name, primary, userId }) => ({
+                url: `${uri}`,
+                method: "PATCH",
+                body: { tableId, name, primary, userId },
+            }),
+            invalidatesTags: ['tables', 'user'],
         }),
         deleteTable: builder.mutation({
             query: ( tableId: string ) => ({
@@ -31,5 +39,5 @@ export const tablesSlice = apiSlice.injectEndpoints({
 })
 
 
-export const { useGetTablesQuery, useGetTableQuery, useCreateTableMutation, useDeleteTableMutation } = tablesSlice;
+export const { useGetTablesQuery, useGetTableQuery, useCreateTableMutation, useUpdateTableMutation, useDeleteTableMutation } = tablesSlice;
 

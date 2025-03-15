@@ -2,13 +2,13 @@
 
 import React, { useState } from 'react';
 import { Button } from 'antd';
-import { useAppSelector } from '@/shared/redux/appStore';
 import Tables from '@/widgets/tables/ui/tables/tables';
 import CreateTablePopup from '@/widgets/tables/ui/createTablePopup/createTablePopup';
 import {PlusOutlined} from "@ant-design/icons";
+import {useActiveUser} from "@/shared/hooks/useActiveUser";
 
 const Page = () => {
-    const user = useAppSelector((state) => state.user.user);
+    const { user, isLoading } = useActiveUser()
     const [openPopup, setOpenPopup] = useState(false);
 
     if (user) {

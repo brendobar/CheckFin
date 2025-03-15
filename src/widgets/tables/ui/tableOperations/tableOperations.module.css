@@ -24,18 +24,8 @@
 }
 
 
-.categories{
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 48px;
-}
-
-.incomeCategories,
-.expenseOperations{
-    max-width: calc(50% - 24px);
-    width: 100%;
+.categoriesCharts{
+    margin-bottom: 48px;
 }
 
 

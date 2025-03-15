@@ -1,7 +1,7 @@
 'use client'
 
 import { PieChart, Pie, Sector, ResponsiveContainer } from "recharts";
-import { useState, useCallback } from "react";
+import {useState, useCallback, useEffect} from "react";
 import styles from './categoryChart.module.css'
 import classNames from "classnames";
 import {Spin} from "antd";
@@ -29,13 +29,20 @@ const CategoryChart = ({data, title, customClass, loading}: CategoryChartProps) 
         const sy = cy + (outerRadius + 10) * sin;
         const mx = cx + (outerRadius + 30) * cos;
         const my = cy + (outerRadius + 30) * sin;
-        const ex = mx + (cos >= 0 ? 1 : -1) * 22;
+        const ex = mx + (cos >= 0 ? 1 : -1) * 2;
         const ey = my;
         const textAnchor = cos >= 0 ? "start" : "end";
 
         return (
             <g>
-                <text x={cx} y={cy} dy={8} textAnchor="middle" fill='var(--text)'>
+                <text
+                    x={cx}
+                    y={cy}
+                    dy={8}
+                    textAnchor="middle"
+                    fill='var(--text)'
+                    fontSize={16}
+                >
                     {payload.name}
                 </text>
                 <Sector
@@ -68,6 +75,22 @@ const CategoryChart = ({data, title, customClass, loading}: CategoryChartProps) 
         );
     }, []);
 
+    const [chartSize, setChartSize] = useState({ inner: 100, outer: 120 });
+
+    useEffect(() => {
+        const updateSize = () => {
+            const width = window.innerWidth
+            if (width <= 767) {
+                setChartSize({ inner: 50, outer: 60 })
+            } else {
+                setChartSize({ inner: 100, outer: 120 })
+            }
+        };
+        updateSize();
+        window.addEventListener("resize", updateSize);
+        return () => window.removeEventListener("resize", updateSize);
+    }, []);
+
     if(loading){
         return (
             <div className={classNames(styles.loading, customClass)}>
@@ -82,7 +105,7 @@ const CategoryChart = ({data, title, customClass, loading}: CategoryChartProps) 
     return (
         <div className={classNames(styles.chart, customClass)}>
             <p className={styles.title}>{title}</p>
-            <ResponsiveContainer height={300}>
+            <ResponsiveContainer height={450}>
                 <PieChart>
                     <Pie
                         activeIndex={activeCategory}
@@ -90,10 +113,11 @@ const CategoryChart = ({data, title, customClass, loading}: CategoryChartProps) 
                         data={data}
                         cx="50%"
                         cy="50%"
-                        innerRadius={60}
-                        outerRadius={80}
+                        innerRadius={chartSize.inner}
+                        outerRadius={chartSize.outer}
                         fill="var(--accent)"
                         dataKey="value"
+                        labelLine={true}
                         onMouseEnter={(_, index) => setActiveCategory(index)}
                     />
                 </PieChart>

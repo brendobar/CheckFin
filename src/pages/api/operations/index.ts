@@ -1,5 +1,8 @@
 import {NextApiRequest, NextApiResponse} from 'next'
 import {db} from "@/shared/prisma/prisma"
+import { Operation } from "@/entities/operation/model/types";
+import {updateUserBalance} from "@/shared/lib/updateUserBalance";
+
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     try {
@@ -25,12 +28,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                     }
                 });
 
+                const table = await db.table.findUnique({ where: { id: tableId } });
+                if (table) {
+                    await updateUserBalance(table.userId)
+                }
+
                 return res.status(201).json(operation)
             } catch (error) {
                 return res.status(500).json({message: 'Ошибка сервера', error: error})
             }
         } else if (req.method === 'GET') {
-            const {tableId, type} = req.query
+            const {tableId, type, filtered} = req.query
 
 
             if (type){
@@ -99,11 +107,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         } else if (req.method === 'PATCH') {
             const {id} = req.query
-            const {name, value, type, categories, comment, date} = req.body;
+            const {userId, name, value, type, categories, comment, date} = req.body;
             const operationId = Number(id)
 
             if (!id || isNaN(operationId)) {
                 return res.status(400).json({message: 'Некорректные данные'});
+            }
+
+            if(!userId){
+                return res.status(400).json({message: 'Пользователь не авторизован'})
             }
 
             try {
@@ -129,6 +141,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         categories: {include: {category: true}}
                     }
                 })
+
+                console.log('userId' + userId)
+                await updateUserBalance(userId)
 
                 return res.status(200).json(updatedOperation)
             } catch (error) {

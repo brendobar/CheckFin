@@ -3,6 +3,7 @@ import {Button, Divider, Form, Input, InputRef, message, Select, SelectProps, Sp
 import {useRef, useState} from 'react'
 import {useCreateCategoryMutation} from "@/entities/category/api/categorySlice"
 import {useAppSelector} from "@/shared/redux/appStore";
+import {useActiveUser} from "@/shared/hooks/useActiveUser";
 
 type CategorySelectProps = {
     categoriesOptions: SelectProps['options'],
@@ -19,7 +20,7 @@ const CategorySelect = ({
                             name,
                             placeholder
                         }: CategorySelectProps) => {
-    const user = useAppSelector(state => state.user.user)
+    const { user, isLoading: isUserLoading } = useActiveUser()
 
     const [items, setItems] = useState<SelectProps['options']>(categoriesOptions || []);
     const [categoryName, setCategoryName] = useState('');
@@ -58,9 +59,10 @@ const CategorySelect = ({
 
         <Form.Item label={label || ''} name={name}>
             <Select
-                mode="tags"
+                mode="multiple"
                 placeholder={placeholder}
                 options={items}
+                showSearch={false}
                 dropdownRender={(menu) => (
                     <>
                         {menu}

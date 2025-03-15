@@ -8,7 +8,7 @@ export type Table = {
     user: User,
     operations: Operation[],
     balance: number
-
+    primary: boolean
 }
 
 

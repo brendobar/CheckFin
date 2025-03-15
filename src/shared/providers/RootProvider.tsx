@@ -5,7 +5,8 @@ import {SessionProvider} from "next-auth/react";
 import AntdProvider from "@/shared/providers/AntdProvider";
 
 
-export default function RootProvider({ children,}: { children: React.ReactNode }) {
+export default async function RootProvider({ children,}: { children: React.ReactNode }) {
+
     return (
         <StoreProvider>
             <AntdRegistry>

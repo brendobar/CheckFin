@@ -1,0 +1,106 @@
+
+.loading,
+.empty{
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 0 !important;
+}
+
+
+.operationsContainer{
+    padding: 64px 0;
+
+}
+
+.operations{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 32px 0;
+
+}
+
+
+.operation{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--black10);
+    border-radius: 12px;
+    padding: 16px;
+}
+.oLeft{
+    max-width: 50%;
+    width: 100%;
+}
+.oName{
+    font-size: 20px;
+    margin-bottom: 12px;
+}
+.categories{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding: 0;
+    list-style: none;
+}
+.categories li{
+    padding: 4px 8px;
+    border: 1px solid var(--text);
+    border-radius: 4px;
+    background-color: rgb(from var(--text) r g b / 10%);
+}
+
+
+.oValue{
+    font-size: 20px;
+}
+.oRight{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+    max-width: 40%;
+    width: 100%;
+}
+
+
+.editPopover{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.deleteBTN{
+    color: var(--error);
+    cursor: pointer;
+}
+.editBTN{
+    cursor: pointer;
+    border: 0;
+    background: unset;
+    color: var(--text);
+}
+
+
+
+@media screen and (max-width: 767px){
+
+    .operation{
+        padding: 16px 12px;
+    }
+    .oName{
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+    .categories li{
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+    .oValue{
+        font-size: 16px;
+    }
+}

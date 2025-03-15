@@ -4,23 +4,21 @@ import {Button, Dropdown, MenuProps, Space} from "antd";
 import {CaretDownOutlined, LogoutOutlined, SettingOutlined, TableOutlined} from '@ant-design/icons';
 import {useRouter} from "next/navigation";
 import {signOut} from "next-auth/react";
-import {useAppDispatch, useAppSelector} from "@/shared/redux/appStore";
-import {reset} from "@/entities/user/api/userSlice";
 import Link from "next/link";
 import ThemeToggle from "@/widgets/header/ui/themeToggle";
+import {useActiveUser} from "@/shared/hooks/useActiveUser";
 
 
 
 const Header = () => {
     const router = useRouter();
-    const dispatch = useAppDispatch();
 
     const handleLogout = async () => {
         await signOut();
-        dispatch(reset());
     };
 
-    const user = useAppSelector(state => state.user.user)
+    const { user, isLoading } = useActiveUser()
+
 
 
 

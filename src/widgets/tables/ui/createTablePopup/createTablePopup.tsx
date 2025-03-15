@@ -2,9 +2,9 @@
 
 import styles from './createTablePopup.module.css'
 import {Button, Form, Input, message, Modal} from "antd";
-import {useAppSelector} from "@/shared/redux/appStore";
 import {useState} from "react";
 import {useCreateTableMutation} from "@/widgets/tables/api/tablesSlice";
+import {useActiveUser} from "@/shared/hooks/useActiveUser";
 
 type Props = {
     visible: boolean
@@ -17,9 +17,8 @@ type FormFields = {
 }
 
 const CreateTablePopup = ({ visible, onCancel }: Props) => {
-    const user = useAppSelector((state) => state.user.user);
+    const { user, isLoading } = useActiveUser()
     const [messageApi, contextHolder] = message.useMessage()
-
 
     const [createTableForm] = Form.useForm()
     const [isSubmitting, setIsSubmitting] = useState(false)
@@ -28,10 +27,12 @@ const CreateTablePopup = ({ visible, onCancel }: Props) => {
 
     const onSubmit = async (data: FormFields) => {
         setIsSubmitting(true)
+        console.log(user!.tables.length <= 0)
         try {
             await createTable({
                 userId: user!.id,
-                tableName: data.tableName
+                tableName: data.tableName,
+                primary: user!.tables.length <= 0
             }).unwrap();
             onCancel()
             messageApi.success('Таблица успешно создана')

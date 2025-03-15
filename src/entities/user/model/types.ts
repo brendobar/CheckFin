@@ -1,4 +1,6 @@
 import {Operation} from "@/entities/operation";
+import {Table} from "@/widgets/tables";
+import {Category} from "@/entities/category";
 
 export interface User {
     id: string;
@@ -8,7 +10,9 @@ export interface User {
     emailVerified?: Date | null;
     image?: string | null;
     accounts: Account[];
+    tables: Table[];
     operations: Operation[];
+    categories: Category[];
     balance: number;
     createdAt: Date;
     updatedAt: Date;
